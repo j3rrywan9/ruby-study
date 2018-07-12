@@ -1,7 +1,23 @@
 #!/usr/bin/env ruby
 
 class Dog
-  attr_accessor :name, :age
+  attr_reader :name, :age
+
+  # Customized attribute writer
+  def name=(value)
+    if value == ""
+      raise "Name can't be blank!"
+    end
+    @name = value
+  end
+
+  # Customized attribute writer
+  def age=(value)
+    if value < 0
+      raise "An age of #{value} isn't valid!"
+    end
+    @age = value
+  end
 
   def report_age
     puts "#{@name} is #{@age} years old."

@@ -180,3 +180,91 @@ You can *also* continue to access it *after* the block ends!
 
 But a *block* can also return data to the *method*.
 This feature lets the method get *directions* from the block, allowing it to do more of the work.
+
+### Opening the file
+
+Ruby has a built-in class named `File` that represents files on disk.
+
+### Safely closing the file
+
+### Safely closing the file, with a block
+
+Ruby offers a way to open a file, do whatever you need with it, and *automatically* close it again when you're done with it.
+The secret is to call `File.open` with a *block*!
+
+### Blocks have a return value
+
+That's right, just like methods, Ruby blocks return the value of the last expression they contain!
+It's returned to the method as the result of the `yield` keyword.
+
+### Breaking a string into an array of words
+
+Strings have a `split` instance method that you can call to split them into an array of substrings.
+
+The argument to `split` is the *separator*: one or more characters that separate the string into sections.
+
+### Finding the index of an array element
+
+If you pass an argument to the `find_index` method, it will find us the first index where that element occurs in the array.
+
+### Making one array based on another, using "map"
+
+Ruby has just the magic array processor we're looking for: the `map` method.
+The `map` method takes each element of an array, passes it to a block, and builds a new array out of the values the block returns.
+
+## Chapter 7
+
+### Hashes
+
+A **hash** is a collection where each value is accessed via a *key*.
+Keys are an easy way to get data back out of your hash.
+
+### Hashes are objects
+
+### Hashes return "nil" by default
+
+If you try to access a *hash key* that has never been assigned to, the default value is *also* `nil`.
+
+### `nil` (and only `nil`) is "falsy"
+
+Ruby treats `nil` like it's false to make it easier to test whether values have been assigned or not.
+
+### Returning something other than "nil" by default
+
+Without any arguments, `Hash.new` works just like `{}`, giving you a hash that returns `nil` for unassigned keys.
+
+But when you call `Hash.new` and pass an object as an argument, that argument becomes that hash's default object.
+Any time you access a key in that hash that hasn't been assigned to yet, instead of `nil`, you'll get the default object you specified.
+
+### Hashes and "each"
+
+Hashes also have an `each` method, which works in about the same way.
+The only difference is that on hashes, `each` expects a block with *two* parameters: one for the key, and one for the corresponding value.
+
+### Using hashes as method parameters
+
+The convention in Ruby is to use symbols instead of strings for hash parameter keys, because looking up symbol keys is more efficient than looking up strings.
+
+### Leave off the braces!
+
+### Leave off the arrows!
+
+If a hash uses symbols as keys, hash literals let you leave the colon (`:`) off the symbol and replace the hash rocket (`=>`) with a colon.
+
+### Keyword arguments
+
+### Required keyword arguments
+
+## Chapter 8
+
+### The heap
+
+## Chapter 9
+
+In this chapter, we'll learn about **modules** and **mixins**, a powerful way to *group methods together* and then share them *only with particular classes that need them*.
+
+### Using modules as mixins
+
+Ruby offers us **modules** as a way to group related methods.
+A module starts with the keyword `module` and the module name (which must be capitalized) and ends with the keyword `end`.
+In between, in the module body, you can declare one or more methods.

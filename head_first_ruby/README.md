@@ -268,3 +268,85 @@ In this chapter, we'll learn about **modules** and **mixins**, a powerful way to
 Ruby offers us **modules** as a way to group related methods.
 A module starts with the keyword `module` and the module name (which must be capitalized) and ends with the keyword `end`.
 In between, in the module body, you can declare one or more methods.
+
+Looks similar to a class, right?
+That's because a class is actually a kind of module.
+There's a key difference, though.
+You can create instances of a class, but you can't create instances of a module.
+
+Modules that are *designed* to be mixed into classes are often referred to as **mixins**.
+Just as a superclass can have more than one subclass, a mixin can be mixed into any number of classes.
+
+Now, here's the cool part: any number of *modules* can be mixed into a single *class*.
+The class will gain the functionality of *all* the modules!
+
+### Mixins, behind the scenes
+
+Ruby adds the module to the list of places it will look for methods, between the class you're mixing it into and its superclass.
+
+From then on, if a method isn't found on the class, Ruby will look for it in the module.
+And that's how mixins add methods to a class!
+
+The instance variables don't belong to the module at all; they belong to the instances of the classes that mix the module in.
+
+### Why you shouldn't add "initialize" to a mixin
+
+The problem is that the `initialize` method from the class is *overriding* the `initialize` method from the mixin.
+
+### Mixins and method overriding
+
+For a given class, you can get a list of all the places that Ruby will look for methods (both mixins and superclasses) by using the `ancestors` class method.
+It will return an array with all of the class's mixins and superclasses, in the order that they'll be searched.
+
+Ruby searches for instance methods in the modules and classes shown in a class's `ancestors` array, in order.
+If the method it's looking for is found in a class, it just invokes that method.
+Any method by the same name in a mixin is ignored; that is, it gets *overridden* by the class’s method.
+
+## Chapter 10
+
+### Mixins built into Ruby
+
+### Constants
+
+By convention, constant names should be `ALL_CAPS`.
+You can assign a value to a constant within a class or module body, and then access that constant from anywhere within that class or module.
+
+### The Comparable mixin
+
+### The Enumerable module
+
+You just have to provide a specific method that `Enumerable` needs to call.
+It's a method you've worked with before on other classes: the `each` method.
+The methods in `Enumerable` will call on your `each` method to loop through the items in your class, and perform whatever operation you need on them.
+
+## Chapter 11
+
+### Ruby's core classes and modules
+
+As we've said before, Ruby comes with a huge collection of classes and modules to handle a wide variety of common computing tasks.
+Many of these are automatically loaded every time Ruby runs, without the need to load any external libraries; these are known as Ruby's **core** classes and modules.
+
+### The Ruby standard library
+
+### Where Ruby docs come from: rdoc
+
+You can use *rdoc*, a program included with Ruby, to generate documentation for your code.
+You give rdoc a Ruby source file to parse, and it will output HTML files with the documentation.
+
+### Adding your own documentation, with comments
+
+## Chapter 12
+
+### The ensure clause
+
+If you have some code that you need to run *regardless* of whether there's an exception, you can put it in an `ensure` clause.
+The `ensure` clause should appear in a `begin`/`end` block, after all the `rescue` clauses.
+Any statements between the `ensure` and `end` keywords are guaranteed to be run before the block exits.
+
+## Chapter 13
+
+### MiniTest: Ruby's standard unit-testing library
+
+## Chapter 14
+
+### A simple sinatra app

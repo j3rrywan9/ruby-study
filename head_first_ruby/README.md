@@ -1,16 +1,119 @@
 # Head First Ruby
 
-## Chapter 2
+## Chapter 2. Methods and Classes: Getting Organized
+
+### Defining methods
+
+If you want calls to your method to include arguments, you'll need to add **parameters** to the method definition.
+Parameters appear after the method name, within parentheses.
+(You should leave off the parentheses if there are no parameters.)
+Each argument on the method call gets stored in one of the parameters within the method.
+
+The method body consists of one or more Ruby statements that are executed when the method is called.
+
+### Calling methods you've defined
+
+Methods that are defined outside of any class (like these examples) are included in the top-level execution environment.
+Like we saw back in Chapter 1, you can call them anywhere in your code, *without* using the dot operator to specify a receiver.
+
+### Method names
+
+The method name can be one or more lowercase words, separated by underscores.
+(This is just like the convention for variable names.)
+Numbers are legal, but rarely used.
+
+### Parameters
+
+If you need to pass data into your method, you can include one or more parameters after the method name, separated by commas.
+In your method body, parameters can be accessed just like any variable.
+
+### Optional parameters
+
+There's an easy solution, though: *make the parameter optional*.
+You can provide a default value in the method declaration.
+
+Here's an example of a method that uses default values for some of its parameters:
+```ruby
+def order_soda(flavor, size = "medium", quantity = 1)
+  if quantity == 1
+    plural = "soda"
+  else
+    plural = "sodas"
+  end
+  puts "#{quantity} #{size} #{flavor} #{plural}, coming right up!"
+end
+```
+Now, if you want to override the default, just provide an argument with the value you want.
+And if you’re happy with the default, you can skip the argument altogether.
+```ruby
+order_soda("orange")
+order_soda("lemon-lime", "small", 2)
+order_soda("grape", "large")
+```
+There is one requirement to be aware of with optional parameters: they need to appear *after* any other parameters you intend to use.
+If you make a required parameter following an optional parameter, you won’t be able to leave the optional parameter off:
+
+### Return values
+
+As in most languages, Ruby methods have a **return value**, a value that they send back to the code that called them.
+A Ruby method can return a value to its caller using the `return` keyword.
+
+#### Implicit return values
+
+You don't actually need the return keyword in the above method.
+The value of the last expression evaluated within a method automatically becomes that method's return value.
+
+### Returning from a method early
+
+### Some messy method
+
+### Too many arguments
+
+### Too many "if" statements
 
 ### Designing a class
 
+The benefit of using objects is that they keep a set of data, and the methods that operate on that data, in one place.
+
+To start creating your own objects, though, you're going to need classes.
 A **class** is a blueprint for making objects.
 When you use a class to make an object, the class describes what that object *knows* about itself, as well as what that object *does*.
+
+An **instance** of a class is an object that was made using that class.
+You only have to write *one* class, but you can make *many* instances of that class.
+
+**Instance variables** are variables that belong to one object.
+They comprise everything the object **knows** about itself.
+They represent the object's state (its data), and they can have different values for each instance of the class.
+
+**Instance methods** are methods that you can call directly on that object.
+They comprise what the object **does**.
+They have access to the object's instance variables, and can use them to change their behavior based on the values in those variables.
+
+### What's the difference between a class and an object?
+
+A class is a blueprint for an object.
+The class tells Ruby how to make an object of that particular type.
+Objects have instance variables and instance methods, but those variables and methods are *designed* as part of the class.
+
+Each instance of a class can have its own values for the instance variables used within that class's methods.
 
 ### Your first class
 
 We use the `class` keyword to start a new class definition, followed by the name of our new class.
+```ruby
+class Dog
 
+  def talk
+    puts "Bark!"
+  end
+
+  def move(destination)
+    puts "Running to the #{destination}."
+    end
+
+end
+```
 Within the class definition, we can include method definitions.
 Any method we define here will be available as an instance method on instances of the class.
 
@@ -19,6 +122,23 @@ We mark the end of the class definition with the `end` keyword.
 ### Creating new instances (objects)
 
 If we call the `new` method on a class, it will return a new instance of that class.
+We can then assign that instance to a variable, or do whatever else we need to do with it.
+```ruby
+fido = Dog.new
+rex = Dog.new
+```
+Once we have one or more instances of the class, we can call their instance methods.
+We do it in the same way we've called all other methods on objects so far: we use the dot operator to specify which instance is the method's receiver.
+```ruby
+fido.talk
+rex.move("food bowl")
+```
+
+### Breaking up our giant methods into classes
+
+### Creating instances of our new animal classes
+
+### Updating our class diagram with instance methods
 
 ### Instance variables live as long as the instance does
 
@@ -28,35 +148,109 @@ Data written to an object’s instance variables stays with that object, getting
 An instance variable looks just like a regular variable, and follows all the same naming conventions.
 The only difference in syntax is that its name begins with an “at” symbol (`@`).
 
+Here's that Dog class again.
+It's identical to the previous one, except that we added two little `@` symbols to convert the *two* local variables to *one* instance variable.
+```ruby
+class Dog
+
+  def make_up_name
+    @name = "Sandy"
+  end
+
+  def talk
+    puts "#{@name} says Bark!"
+  end
+
+end
+```
+
 ### Encapsulation
 
 Ruby never allows us to access instance variables directly from outside our class.
+
+To help avoid exposing an object's data to malicious (or clumsy) users, most object-oriented languages encourage the concept of **encapsulation**: preventing other parts of the program from directly accessing or changing an object's instance variables.
 
 ### Attribute accessor methods
 
 To encourage encapsulation and protect your instances from invalid data, Ruby doesn't allow you to access or change instance variables from outside the class.
 Instead, you can create **accessor methods**, which will write values to the instance variables and read them back out again for you.
+Once you're accessing your data through accessor methods, it's easy to extend those methods to *validate* your data - to reject any bad values that get passed in.
 
 Ruby has two kinds of accessor methods: *attribute writers* and *attribute readers*.
 (An *attribute* is another name for a piece of data regarding an object.)
 Attribute *writer* methods *set* an instance variable, and attribute *reader* methods *get* the value of an instance variable back.
 
-Accessor methods are just ordinary instance methods; we only refer to them as “accessor methods” because their primary purpose is to access an instance variable.
+Here's a simple class with writer and reader methods for an attribute named my_attribute:
+```ruby
+class MyClass
+
+  def my_attribute=(new_value)
+    @my_attribute = new_value
+  end
+
+  def my_attribute
+    @my_attribute
+  end
+
+end
+```
+
+Accessor methods are just ordinary instance methods; we only refer to them as "accessor methods" because their primary purpose is to access an instance variable.
 
 ### Using accessor methods
+
+Writing a reader and writer method by hand for each attribute can get tedious, though.
+Next, we'll look at an easier way...
 
 ### Attribute writers and readers
 
 Creating this pair of accessor methods for an attribute is so common that Ruby offers us shortcuts - methods named `attr_writer`, `attr_reader`, and `attr_accessor`.
-Calling these three methods within your class definition will automatically define new accessor methods for you.
+Calling these three methods within your class definition will automatically define new accessor methods for you:
 
-## Chapter 3
+| Write this within your class definition... | ...and Ruby will automatically define these methods: |
+| --- | --- |
+| attr_writer :name | |
+| attr_reader :name | |
+| attr_accessor :name | |
+
+All three of these methods can take multiple arguments, specifying multiple attributes that you want to define accessors for.
+```ruby
+attr_accessor :name, :age
+```
+
+#### Symbols
+
+In case you're wondering, those `:name` and `:age` things are symbols.
+A Ruby **symbol** is a series of characters, like a string.
+Unlike a string, though, a symbol's value can't be changed later.
+That makes symbols perfect for use inside Ruby programs, to refer to anything whose name doesn't (usually) change, like a method.
+
+A symbol reference in Ruby code always begins with a colon (`:`).
+A symbol should be in all lowercase, with words separated by underscores, just like a variable name.
+
+### Attribute writers and readers in action
+
+### Ensuring data is valid with accessors
+
+## Chapter 3. Inheritance: Relying on Your Parents
+
+### Copy, paste... Such a waste...
 
 ### Inheritance to the rescue!
 
 Fortunately, like most object-oriented languages, Ruby includes the concept of **inheritance**, which allows classes to inherit methods from one another.
+If one class has some functionality, classes that inherit from it can get that functionality *automatically*.
+
+Instead of repeating method definitions across many similar classes, inheritance lets you move the common methods to a single class.
+You can then specify that other classes inherit from this class.
+The class with the common methods is referred to as the **superclass**, and the classes that inherit those methods are known as **subclasses**.
+
+If a superclass has instance methods, then its subclasses automatically inherit those methods.
+You can get access to all the methods you need from the superclass, without having to duplicate the methods' code in each subclass.
 
 Note that in Ruby, subclasses technically do not inherit instance variables; they inherit the *attribute accessor methods* that create those variables.
+
+### Defining a superclass (requires nothing special)
 
 ### Defining a subclass (is really easy)
 
@@ -87,25 +281,73 @@ If we make a call to the *overriding* method on the *subclass*, we'll see that t
 
 The `super` keyword works like an ordinary method call in almost every respect.
 
-### The Object class
+Another way in which using the super keyword is like a regular method call: you can pass it arguments, and those arguments will be passed to the superclass's method.
+```ruby
+class Person
+
+  def greet_by_name(name)
+    "Hello, #{name}!"
+  end
+
+end
+
+class Friend < Person
+  
+  def greet_by_name(name)
+    basic_greeting = super(name)
+    "#{basic_greeting} Glad to see you!"
+  end
+
+end
+```
+
+But here's a way that `super` *differs* from a regular method call: if you leave the arguments *off*, the superclass method will automatically be called with the same arguments that were passed to the subclass method.
+
+### A super-powered subclass
+
+### The `Object` class
 
 When you define a new class, Ruby implicitly sets a class called `Object` as its superclass (unless you specify a superclass yourself).
 
 Even if you *do* specify a superclass for your class, that superclass probably inherits from `Object`.
 That means almost every Ruby object, directly or indirectly, has `Object` as a superclass!
 
-## Chapter 4
+### Why everything inherits from the `Object` class
+
+## Chapter 4. Initializing Instances: Off to a Great Start
+
+### "nil" stands for nothing
+
+### "/" is a method
 
 ### The "initialize" method
 
 Ruby provides a mechanism to help with this situation: the `initialize` method.
 The `initialize` method is your chance to step in and make the object safe to use, before anyone else attempts to call methods on it.
+```ruby
+class MyClass
+  def initialize
+    puts "Setting up new instance!"
+  end
+end
+```
 
 Ruby calls the `initialize` method on new objects after they're created.
+
+### Employee safety with "initialize"
 
 ### Arguments to "initialize"
 
 It's for situations like this that any arguments to the `new` method are passed on to `initialize`.
+```ruby
+class MyClass
+  def initialize(my_param)
+    puts "Got a parameter from 'new': #{my_param}"
+  end
+end
+
+MyClass.new("hello")
+```
 
 ### Using optional parameters with "initialize"
 
@@ -114,13 +356,24 @@ And that includes optional parameters.
 
 All Ruby classes inherit an `initialize` method from the `Object` superclass.
 
+### "initialize" does an end-run around our validation
+
+### "initialize" and validation
+
 ### Call other methods on the same instance with "self"
 
+Ruby has an answer: the `self` keyword.
 Within instance methods, `self` always refers to the current object.
 
 ### When "self" is optional
 
 If you don't specify a receiver using the dot operator, the receiver defaults to the current object, `self`.
+
+### Restoring "initialize" methods
+
+### Inheritance and "initialize"
+
+### "super" and "initialize"
 
 ### Class methods
 
@@ -128,8 +381,30 @@ It's for situations like this that Ruby supports **class methods**: methods that
 
 A class method definition is very similar to any other method definition in Ruby.
 The difference: you specify that you're defining it *on the class itself*.
+```ruby
+class MyClass
 
-## Chapter 5
+  def MyClass.my_class_method(p1, p2)
+    puts "Hello from MyClass!"
+    puts "My parameters: #{p1}, #{p2}"
+  end
+
+end
+```
+Within a class definition (but outside any instance method definitions), Ruby sets `self` to refer to the class that's being defined.
+So many Rubyists prefer to replace the class name with `self`:
+```ruby
+class MyClass
+
+  def self.my_class_method(p1, p2)
+    puts "Hello from MyClass!"
+    puts "My parameters: #{p1}, #{p2}"
+  end
+
+end
+```
+
+## Chapter 5. Arrays and Blocks: Better Than Loops
 
 ### Arrays
 

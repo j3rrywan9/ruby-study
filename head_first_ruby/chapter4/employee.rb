@@ -11,6 +11,7 @@ class Employee
     if name == ""
       raise "Name can't be blank!"
     end
+    @name = name
   end
 
   def print_name

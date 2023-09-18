@@ -413,23 +413,67 @@ The collection can be any size you need.
 An array can hold objects of any type (even other arrays).
 You can even mix multiple types together in the same array.
 
+We can create an array object and initialize it with data by using an array literal: square brackets (`[]`) surrounding a comma-separated list of values.
+
 ### Accessing arrays
 
-Items in an array are numbered from left to right, starting with 0. This is called the array **index**.
+Items in an array are numbered from left to right, starting with 0.
+This is called the array **index**.
 
 ### Arrays are objects, too!
 
 ### Looping over the items in an array
 
+### The repeating loop
+
 ### Blocks
 
 A **block** is a chunk of code that you associate with a method call.
 While the method runs, it can *invoke* (execute) the block one or more times.
-Methods and blocks work in tandem to process your data.
+*Methods and blocks work in tandem to process your data*.
+
+#### Blocks are mind-bending stuff. But stick with it!
 
 ### Defining a method that takes blocks
 
+Blocks and methods work in tandem.
+In fact, you can't *have* a block without also having a method to accept it.
+So, to start, let's define a method that works with blocks.
+
+### Your first block
+
+Are you ready? Here it comes: your first glimpse of a Ruby block.
+```ruby
+my_method do
+  puts "We're in the block!"
+end
+```
+
+### Flow of control between a method and block
+
+### Calling the same method with different blocks
+
+### Calling a block multiple times
+
+A method can invoke a block as many times as it wants.
+
+### Block parameters
+
+In a similar vein, a method can pass one or more arguments to a block.
+Block parameters are similar to method parameters; they're values that are passed in when the block is run, and that can be accessed within the block body.
+
 ### Using the "yield" keyword
+
+So far, we've been treating blocks like an argument to our methods.
+We've been declaring an extra method parameter that takes a block as an object, then using the `call` method on that object.
+```ruby
+def twice(&my_block)
+  my_block.call
+  my_block.call
+end
+```
+We mentioned that this wasn't the easiest way to accept blocks, though.
+Now, let's learn the less obvious but more concise way: the `yield` keyword.
 
 The `yield` keyword will find and invoke the block a method was called with - there's no need to declare a parameter to accept the block.
 
@@ -444,14 +488,16 @@ This follows another convention that much of the Ruby community has adopted.
 
 ### The "each" method
 
-It's an instance method that appears on every Array object, and it's called `each`.
+It's an instance method that appears on every `Array` object, and it's called `each`.
+
+### The "each" method, step-by-step
 
 ### Blocks and variable scope
 
 But, if you define a variable *before* a block, you can access it inside the block body.
 You can *also* continue to access it *after* the block ends!
 
-## Chapter 6
+## Chapter 6. Block Return Values: How Should I Handle This?
 
 But a *block* can also return data to the *method*.
 This feature lets the method get *directions* from the block, allowing it to do more of the work.
@@ -459,13 +505,59 @@ This feature lets the method get *directions* from the block, allowing it to do 
 ### Opening the file
 
 Ruby has a built-in class named `File` that represents files on disk.
+To open a file named *reviews.txt* in the current directory (folder) so you can read data from it, call the `open` method on the `File` class:
+```ruby
+review_file = File.open("reviews.txt")
+```
+The `open` method returns a new `File` object.
+(It actually calls `File.new` for you, and returns the result of that.)
+
+There are many different methods that you can call on this `File` instance, but the most useful one for our current purpose is the `readlines` method, which returns all the lines in the file as an array.
+```ruby
+lines = review_file.readlines
+puts "Line 4: #{lines[3]}"
+puts "Line 1: #{lines[0]}"
+```
 
 ### Safely closing the file
+
+We've opened the file and read its contents.
+Your next step should be to *close the file*.
+Closing the file tells the operating system, "I'm done with this file; others can use it now."
+```ruby
+review_file.close
+```
 
 ### Safely closing the file, with a block
 
 Ruby offers a way to open a file, do whatever you need with it, and *automatically* close it again when you're done with it.
-The secret is to call `File.open` with a *block*!
+The secret is to call `File.open` with *a block*!
+```ruby
+File.open("reviews.txt") do |review_file|
+  lines = review_file.readlines
+end
+```
+
+### Don't forget about variable scope!
+
+Switching to the block form of File.open has introduced a problem, however.
+We store the array returned by readlines in a variable within the block, but we can't access it after the block.
+
+The problem is that we're creating the lines variable within the block.
+As we learned back in Chapter 5, any variable created within a block has a scope that's limited to the body of that block.
+Those variables can't be "seen" from outside the block.
+
+But, as we also learned in Chapter 5, local variables declared before a block can be seen within the block body (and are still visible after the block, of course).
+So the simplest solution is to create the lines variable before declaring the block.
+```ruby
+lines = []
+
+File.open("reviews.txt") do |review_file|
+  lines = review_file.readlines
+end
+
+puts lines.length
+```
 
 ### Blocks have a return value
 

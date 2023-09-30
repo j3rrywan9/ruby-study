@@ -477,6 +477,25 @@ Now, let's learn the less obvious but more concise way: the `yield` keyword.
 
 The `yield` keyword will find and invoke the block a method was called with - there's no need to declare a parameter to accept the block.
 
+This method is functionally equivalent to the one above:
+```ruby
+def twice
+  yield
+  yield
+end
+```
+Just like with `call`, we can also give one or more arguments to `yield`, which will be passed to the block as parameters.
+Again, these methods are functionally equivalent:
+```ruby
+def give(&my_block)
+  my_block.call("2 turtle doves", "1 partridge")
+end
+
+def give
+  yield "2 turtle doves", "1 partridge"
+end
+```
+
 ### Block formats
 
 So far, we've been using the `do...end` format for blocks.
@@ -490,6 +509,15 @@ This follows another convention that much of the Ruby community has adopted.
 
 It's an instance method that appears on every `Array` object, and it's called `each`.
 
+The `each` method uses this feature of Ruby to loop through each of the items in an array, yielding them to a block, one at a time.
+```ruby
+["a", "b", "c"].each { |param| puts param }
+```
+
+### DRYing up our code with "each" and blocks
+
+### Blocks and variable scope
+
 ### The "each" method, step-by-step
 
 ### Blocks and variable scope
@@ -501,6 +529,8 @@ You can *also* continue to access it *after* the block ends!
 
 But a *block* can also return data to the *method*.
 This feature lets the method get *directions* from the block, allowing it to do more of the work.
+
+### A big collection of words to search through
 
 ### Opening the file
 
@@ -540,14 +570,14 @@ end
 
 ### Don't forget about variable scope!
 
-Switching to the block form of File.open has introduced a problem, however.
-We store the array returned by readlines in a variable within the block, but we can't access it after the block.
+Switching to the block form of `File.open` has introduced a problem, however.
+We store the array returned by `readlines` in a variable *within* the block, but we can't access it *after* the block.
 
-The problem is that we're creating the lines variable within the block.
+The problem is that we're *creating* the `lines` variable *within* the block.
 As we learned back in Chapter 5, any variable created within a block has a scope that's limited to the body of that block.
 Those variables can't be "seen" from outside the block.
 
-But, as we also learned in Chapter 5, local variables declared before a block can be seen within the block body (and are still visible after the block, of course).
+But, as we also learned in Chapter 5, local variables declared *before* a block can be seen *within* the block body (and are still visible after the block, of course).
 So the simplest solution is to create the lines variable before declaring the block.
 ```ruby
 lines = []
@@ -559,15 +589,53 @@ end
 puts lines.length
 ```
 
+### Finding array elements we want, with a block
+
+### The verbose way to find array elements, using "each"
+
+You can call the `include?` method on any instance of the String class to determine if it includes a substring (which you pass as an argument).
+Remember, by convention, methods that end in `?` return a Boolean value.
+The `include?` method will return `true` if the string contains the specified substring, and `false` if it doesn't.
+```ruby
+my_string = "I like apples, bananas, and oranges"
+puts my_string.include?("bananas")
+puts my_string.include?("elephants")
+```
+
+### Introducing a faster method...
+
+But actually, Ruby offers a much quicker way to do this.
+The `find_all` method uses a block to run a test against each element in an array.
+It returns a new array that contains only the elements for which the test returned a true value.
+
+We can use the `find_all` method to achieve the same result, by calling `include?` in its block:
+```ruby
+lines = []
+
+File.open("reviews.txt") do |review_file|
+  lines = review_file.readlines
+end
+
+relevant_lines = lines.find_all { |line| line.include?("Truncated") }
+```
+
 ### Blocks have a return value
 
 That's right, just like methods, Ruby blocks return the value of the last expression they contain!
 It's returned to the method as the result of the `yield` keyword.
 
+### Putting it all together
+
+### A closer look at the block return values
+
 ### Breaking a string into an array of words
 
 Strings have a `split` instance method that you can call to split them into an array of substrings.
-
+```ruby
+p "1-800-555-0199".split("-")
+p "his/her".split("/")
+p "apple, avocado, anvil".split(", ")
+```
 The argument to `split` is the *separator*: one or more characters that separate the string into sections.
 
 ### Finding the index of an array element
@@ -579,17 +647,27 @@ If you pass an argument to the `find_index` method, it will find us the first in
 Ruby has just the magic array processor we're looking for: the `map` method.
 The `map` method takes each element of an array, passes it to a block, and builds a new array out of the values the block returns.
 
-## Chapter 7
+## Chapter 7. Hashes: Labeling Data
 
 ### Hashes
 
+Ruby has another way of storing collections of data: *hashes*.
 A **hash** is a collection where each value is accessed via a *key*.
 Keys are an easy way to get data back out of your hash.
 
 ### Hashes are objects
 
+We've been hearing over and over that everything in Ruby is an object.
+We saw that arrays are objects, and it probably won't surprise you to learn that hashes are objects, too.
+```ruby
+protons = {"H" => 1, "Li" => 3, "Ne" => 10}
+puts protons.class
+```
+
 ### Hashes return "nil" by default
 
+So what happened?
+As we saw in Chapter 5, if you try to access an array element that hasn't been assigned to yet, you'll get `nil` back.
 If you try to access a *hash key* that has never been assigned to, the default value is *also* `nil`.
 
 ### `nil` (and only `nil`) is "falsy"

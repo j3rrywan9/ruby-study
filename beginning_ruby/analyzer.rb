@@ -12,7 +12,7 @@ word_count = text.split.length
 
 paragraph_count = text.split(/\n\n/).length
 
-sentence_count = text.split(/\.|\?|!/).length
+sentence_count = text.split(/[.?!]/).length
 
 puts "#{line_count} lines"
 puts "#{total_characters} characters"

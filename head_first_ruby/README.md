@@ -420,6 +420,14 @@ We can create an array object and initialize it with data by using an array lite
 Items in an array are numbered from left to right, starting with 0.
 This is called the array **index**.
 
+To retrieve an item, you specify the integer index of the item you want within square brackets:
+```ruby
+prices[0]
+prices[1]
+prices[2]
+```
+You can assign to a given array index with `=`, much like assigning to a variable.
+
 ### Arrays are objects, too!
 
 ### Looping over the items in an array
@@ -700,11 +708,13 @@ If a hash uses symbols as keys, hash literals let you leave the colon (`:`) off 
 
 ### Required keyword arguments
 
-## Chapter 8
+## Chapter 8. References: Crossed Signals
 
 ### The heap
 
-## Chapter 9
+### References
+
+## Chapter 9. Mixins: Mix It Up
 
 In this chapter, we'll learn about **modules** and **mixins**, a powerful way to *group methods together* and then share them *only with particular classes that need them*.
 
@@ -747,7 +757,7 @@ Ruby searches for instance methods in the modules and classes shown in a class's
 If the method it's looking for is found in a class, it just invokes that method.
 Any method by the same name in a mixin is ignored; that is, it gets *overridden* by the class’s method.
 
-## Chapter 10
+## Chapter 10. Comparable and Enumerable: Ready-Made Mixes
 
 ### Mixins built into Ruby
 
@@ -764,12 +774,20 @@ You just have to provide a specific method that `Enumerable` needs to call.
 It's a method you've worked with before on other classes: the `each` method.
 The methods in `Enumerable` will call on your `each` method to loop through the items in your class, and perform whatever operation you need on them.
 
-## Chapter 11
+## Chapter 11. Documentation: Read the Manual
+
+### Learning how to learn more
 
 ### Ruby's core classes and modules
 
 As we've said before, Ruby comes with a huge collection of classes and modules to handle a wide variety of common computing tasks.
 Many of these are automatically loaded every time Ruby runs, without the need to load any external libraries; these are known as Ruby's **core** classes and modules.
+
+### Documentation
+
+### HTML documentation
+
+### Listing available classes and modules
 
 ### The Ruby standard library
 
